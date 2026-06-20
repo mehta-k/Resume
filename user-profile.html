@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile | Global Media</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Global Media</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="signup.html" class="nav-link">Create Profile</a>
+                <a href="#" class="nav-link">Messages</a>
+                <a href="user-profile.html" class="nav-link active">Profile</a>
+            </div>
+            <div class="user-menu">
+                <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle dark mode">🌙</button>
+                <div id="userAvatarNav" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%); font-size: 1.5rem; cursor: pointer; border: 2px solid var(--primary-color);">👤</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1200px; grid-template-columns: 1fr;">
+        <!-- Profile Header -->
+        <main style="background: var(--bg-primary); border-radius: 16px; overflow: hidden;">
+            <!-- Cover Photo -->
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%); position: relative;">
+                <button class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem;">Edit Cover</button>
+            </div>
+
+            <!-- Profile Info -->
+            <div style="padding: 1.5rem; position: relative; margin-top: -70px; margin-bottom: 1.5rem;">
+                <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                    <div id="profileAvatarLarge" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; box-shadow: 0 4px 15px rgba(255, 0, 110, 0.3);">👤</div>
+                    <div style="flex: 1;">
+                        <h1 id="profileName" style="font-size: 1.75rem; margin-bottom: 0;">Your Name</h1>
+                        <p id="profileHandle" style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1rem;">@username</p>
+                        <p id="profileBio" style="margin-bottom: 1rem; line-height: 1.6;">Your bio goes here</p>
+                        <div style="display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">
+                            <span id="profileLocation">📍 Location</span>
+                            <span id="profileWebsite">🔗 website.com</span>
+                            <span id="profileJoinDate">📅 Joined</span>
+                        </div>
+                        <div style="display: flex; gap: 2rem; margin: 1rem 0;">
+                            <div>
+                                <span id="followingCount" style="font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">0</span>
+                                <span style="color: var(--text-secondary);"> Following</span>
+                            </div>
+                            <div>
+                                <span id="followersCount" style="font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">0</span>
+                                <span style="color: var(--text-secondary);"> Followers</span>
+                            </div>
+                            <div>
+                                <span id="postsCount" style="font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">0</span>
+                                <span style="color: var(--text-secondary);"> Posts</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="editProfile()">Edit Profile</button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display: flex; border-bottom: 1px solid var(--border-color); padding: 0 1.5rem;">
+                <button class="tab-btn active" data-tab="posts" onclick="switchTab(event, 'posts')">Posts</button>
+                <button class="tab-btn" data-tab="media" onclick="switchTab(event, 'media')">Media</button>
+                <button class="tab-btn" data-tab="likes" onclick="switchTab(event, 'likes')">Likes</button>
+                <button class="tab-btn" data-tab="followers" onclick="switchTab(event, 'followers')">Followers</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="posts-tab" class="tab-content">
+                <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                    <p style="font-size: 1.2rem;">No posts yet</p>
+                    <p>Start sharing your moments! 📸</p>
+                    <a href="index.html" class="btn btn-primary" style="display: inline-block; margin-top: 1rem; text-decoration: none;">Go to Feed</a>
+                </div>
+            </div>
+
+            <div id="media-tab" class="tab-content" style="display: none; padding: 2rem; text-align: center; color: var(--text-secondary);">
+                <p>No media posts yet</p>
+            </div>
+
+            <div id="likes-tab" class="tab-content" style="display: none; padding: 2rem; text-align: center; color: var(--text-secondary);">
+                <p>No liked posts</p>
+            </div>
+
+            <div id="followers-tab" class="tab-content" style="display: none; padding: 1.5rem;">
+                <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+                    <p>Follow requests appear here</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(131, 56, 236, 0.1) 100%); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+        <p style="margin-bottom: 0.5rem; font-weight: 600;">© 2026 Global Media</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Connecting people around the world 🌍</p>
+    </footer>
+
+    <style>
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .tab-content {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        // Load profile from localStorage
+        function loadProfile() {
+            const profileData = localStorage.getItem('userProfile');
+            
+            if (!profileData) {
+                // No profile created yet, redirect to signup
+                window.location.href = 'signup.html';
+                return;
+            }
+
+            const profile = JSON.parse(profileData);
+
+            // Update page title
+            document.title = `${profile.fullName} - Profile | Global Media`;
+
+            // Update profile info
+            document.getElementById('profileName').textContent = profile.fullName;
+            document.getElementById('profileHandle').textContent = '@' + profile.username;
+            document.getElementById('profileBio').textContent = profile.bio || 'Welcome to my profile!';
+            document.getElementById('profileLocation').textContent = profile.location ? `📍 ${profile.location}` : '📍 Location not set';
+            document.getElementById('profileWebsite').textContent = profile.website ? `🔗 ${profile.website}` : '🔗 No website';
+            document.getElementById('profileJoinDate').textContent = `📅 Joined ${profile.joinDate}`;
+            
+            // Update counts
+            document.getElementById('followersCount').textContent = profile.followers.toLocaleString();
+            document.getElementById('followingCount').textContent = profile.following.toLocaleString();
+            document.getElementById('postsCount').textContent = profile.posts.toLocaleString();
+
+            // Update avatars
+            const emoji = profile.emoji;
+            document.getElementById('profileAvatarLarge').textContent = emoji;
+            document.getElementById('userAvatarNav').textContent = emoji;
+        }
+
+        function switchTab(event, tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.style.display = 'none');
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        function editProfile() {
+            alert('Edit profile feature coming soon! 🚀');
+        }
+
+        // Load profile on page load
+        loadProfile();
+
+        // Add dark mode toggle functionality
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>

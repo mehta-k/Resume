@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Karna Mehta - Profile | Global Media</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Global Media</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="#" class="nav-link">Explore</a>
+                <a href="#" class="nav-link">Messages</a>
+                <a href="profile.html" class="nav-link active">Profile</a>
+            </div>
+            <div class="user-menu">
+                <img src="https://via.placeholder.com/40" alt="User" class="user-avatar">
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1200px; grid-template-columns: 1fr;">
+        <!-- Profile Header -->
+        <main style="background: var(--bg-primary); border-radius: 16px; overflow: hidden;">
+            <!-- Cover Photo -->
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #1DA1F2 0%, #14171A 100%); position: relative;">
+                <button class="btn btn-primary" style="position: absolute; top: 1rem; right: 1rem;">Edit Cover</button>
+            </div>
+
+            <!-- Profile Info -->
+            <div style="padding: 1.5rem; position: relative; margin-top: -70px; margin-bottom: 1.5rem;">
+                <div style="display: flex; gap: 1.5rem; align-items: flex-start;">
+                    <img src="https://via.placeholder.com/150" alt="Profile" style="width: 150px; height: 150px; border-radius: 50%; border: 4px solid white; background: white;">
+                    <div style="flex: 1;">
+                        <h1 style="font-size: 1.75rem; margin-bottom: 0;">Karna Mehta</h1>
+                        <p style="color: var(--text-secondary); font-size: 1.1rem; margin-bottom: 1rem;">@karnamehta</p>
+                        <p style="margin-bottom: 1rem; line-height: 1.6;">🌍 Web Developer | 💻 Tech Enthusiast | 🚀 Always Learning</p>
+                        <div style="display: flex; gap: 1.5rem; color: var(--text-secondary); font-size: 0.95rem; margin-bottom: 1rem;">
+                            <span>📍 San Francisco, CA</span>
+                            <span>🔗 johndoe.dev</span>
+                            <span>📅 Joined March 2022</span>
+                        </div>
+                        <div style="display: flex; gap: 2rem; margin: 1rem 0;">
+                            <div>
+                                <span style="font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">1.2K</span>
+                                <span style="color: var(--text-secondary);"> Following</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">534</span>
+                                <span style="color: var(--text-secondary);"> Followers</span>
+                            </div>
+                            <div>
+                                <span style="font-weight: bold; font-size: 1.1rem; color: var(--primary-color);">342</span>
+                                <span style="color: var(--text-secondary);"> Posts</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary">Follow</button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div style="display: flex; border-bottom: 1px solid var(--border-color); padding: 0 1.5rem;">
+                <button class="tab-btn active" data-tab="posts" onclick="switchTab(event, 'posts')">Posts</button>
+                <button class="tab-btn" data-tab="media" onclick="switchTab(event, 'media')">Media</button>
+                <button class="tab-btn" data-tab="likes" onclick="switchTab(event, 'likes')">Likes</button>
+                <button class="tab-btn" data-tab="followers" onclick="switchTab(event, 'followers')">Followers</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="posts-tab" class="tab-content">
+                <div class="post" style="border-bottom: 1px solid var(--border-color);">
+                    <div class="post-header">
+                        <img src="https://via.placeholder.com/48" alt="Karna Mehta" class="post-avatar">
+                        <div class="post-meta">
+                            <span class="post-author">Karna Mehta</span>
+                            <span class="post-handle">karnamehta</span>
+                            <span class="post-time">2d</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        Just completed a challenging project using React and Node.js! Really proud of how it turned out. #WebDevelopment #JavaScript
+                    </div>
+                    <img src="https://via.placeholder.com/500x300" alt="Project screenshot" class="post-image">
+                    <div class="post-actions">
+                        <button class="action-btn">
+                            <span>🤍</span>
+                            <span class="action-count">234</span>
+                        </button>
+                        <button class="action-btn">
+                            <span>💬</span>
+                            <span class="action-count">45</span>
+                        </button>
+                        <button class="action-btn">
+                            <span>🔄</span>
+                            <span class="action-count">78</span>
+                        </button>
+                        <button class="action-btn">
+                            <span>📤</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="post" style="border-bottom: 1px solid var(--border-color);">
+                    <div class="post-header">
+                        <img src="https://via.placeholder.com/48" alt="Karna Mehta" class="post-avatar">
+                        <div class="post-meta">
+                            <span class="post-author">Karna Mehta</span>
+                            <span class="post-handle">karnamehta</span>
+                            <span class="post-time">5d</span>
+                        </div>
+                    </div>
+                    <div class="post-content">
+                        Starting a new web development course today! Excited to learn new technologies and improve my skills. Anyone else learning something new?
+                    </div>
+                    <div class="post-actions">
+                        <button class="action-btn">
+                            <span>🤍</span>
+                            <span class="action-count">156</span>
+                        </button>
+                        <button class="action-btn">
+                            <span>💬</span>
+                            <span class="action-count">32</span>
+                        </button>
+                        <button class="action-btn">
+                            <span>🔄</span>
+                            <span class="action-count">89</span>
+                        </button>
+                        <button class="action-btn">
+                            <span>📤</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="media-tab" class="tab-content" style="display: none; padding: 2rem; text-align: center; color: var(--text-secondary);">
+                <p>No media posts yet</p>
+            </div>
+
+            <div id="likes-tab" class="tab-content" style="display: none; padding: 2rem; text-align: center; color: var(--text-secondary);">
+                <p>No liked posts</p>
+            </div>
+
+            <div id="followers-tab" class="tab-content" style="display: none; padding: 1.5rem;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                        <img src="https://via.placeholder.com/80" alt="Follower" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 0.5rem;">
+                        <h4 style="margin: 0.5rem 0;">Jane Smith</h4>
+                        <p style="color: var(--text-secondary); margin: 0 0 1rem 0;">@janesmith</p>
+                        <button class="btn btn-primary" style="width: 100%;">Following</button>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                        <img src="https://via.placeholder.com/80" alt="Follower" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 0.5rem;">
+                        <h4 style="margin: 0.5rem 0;">Mike Johnson</h4>
+                        <p style="color: var(--text-secondary); margin: 0 0 1rem 0;">@mikej</p>
+                        <button class="btn btn-primary" style="width: 100%;">Following</button>
+                    </div>
+                    <div style="border: 1px solid var(--border-color); border-radius: 12px; padding: 1rem; text-align: center;">
+                        <img src="https://via.placeholder.com/80" alt="Follower" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 0.5rem;">
+                        <h4 style="margin: 0.5rem 0;">Sarah Williams</h4>
+                        <p style="color: var(--text-secondary); margin: 0 0 1rem 0;">@sarahw</p>
+                        <button class="btn btn-primary" style="width: 100%;">Following</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(131, 56, 236, 0.1) 100%); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+        <p style="margin-bottom: 0.5rem; font-weight: 600;">© 2026 Global Media</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Connecting people around the world 🌍</p>
+    </footer>
+
+    <style>
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            color: var(--primary-color);
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background-color: var(--primary-color);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .tab-content {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        function switchTab(event, tabName) {
+            // Hide all tabs
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.style.display = 'none');
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').style.display = 'block';
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

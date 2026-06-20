@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages | Global Media</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .messages-container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 1rem;
+            height: 80vh;
+            background: var(--bg-primary);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .messages-sidebar {
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messages-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .messages-header h2 {
+            margin: 0 0 1rem 0;
+            color: var(--text-primary);
+        }
+
+        .messages-search {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .messages-search:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
+        }
+
+        .conversations-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.5rem;
+        }
+
+        .conversation-item {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .conversation-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .conversation-item.active {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2) 0%, rgba(131, 56, 236, 0.2) 100%);
+            border-color: var(--primary-color);
+        }
+
+        .conversation-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .conversation-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-preview {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .unread-badge {
+            width: 24px;
+            height: 24px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Chat Area */
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-primary);
+        }
+
+        .chat-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header-info {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .chat-header-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .chat-header-details h3 {
+            margin: 0;
+            color: var(--text-primary);
+        }
+
+        .chat-header-details p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .message {
+            display: flex;
+            margin-bottom: 0.5rem;
+        }
+
+        .message.own {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 60%;
+            padding: 0.75rem 1rem;
+            border-radius: 16px;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.received {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-bottom-left-radius: 4px;
+        }
+
+        .message-bubble.sent {
+            background: var(--gradient-1);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+            text-align: center;
+            margin-bottom: 0.5rem;
+            width: 100%;
+        }
+
+        .chat-input-area {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 15px rgba(255, 0, 110, 0.3);
+        }
+
+        .chat-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .chat-action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        @media (max-width: 768px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+
+            .messages-sidebar {
+                display: none;
+            }
+
+            .message-bubble {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Global Media</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="explore.html" class="nav-link">Explore</a>
+                <a href="reels.html" class="nav-link">Reels</a>
+                <a href="messages.html" class="nav-link active">Messages</a>
+                <a href="user-profile.html" class="nav-link">Profile</a>
+            </div>
+            <div class="user-menu">
+                <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle dark mode">🌙</button>
+                <div id="userAvatarNav" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%); font-size: 1.5rem; cursor: pointer; border: 2px solid var(--primary-color);">👤</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1400px; grid-template-columns: 1fr;">
+        <main class="feed" style="background: transparent; border: none;">
+            <div class="messages-container">
+                <!-- Conversations Sidebar -->
+                <div class="messages-sidebar">
+                    <div class="messages-header">
+                        <h2 style="font-size: 1.5rem;">💬 Messages</h2>
+                        <input type="text" class="messages-search" placeholder="Search conversations...">
+                    </div>
+
+                    <div class="conversations-list" id="conversationsList"></div>
+                </div>
+
+                <!-- Chat Area -->
+                <div class="chat-area">
+                    <div class="empty-state" id="emptyState">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">💌</div>
+                        <h3>Select a conversation</h3>
+                        <p>Choose a conversation from the left to start chatting</p>
+                    </div>
+
+                    <div id="chatContainer" style="display: none; display: flex; flex-direction: column; height: 100%;">
+                        <!-- Chat Header -->
+                        <div class="chat-header">
+                            <div class="chat-header-info">
+                                <div class="chat-header-avatar" id="chatHeaderAvatar">👤</div>
+                                <div class="chat-header-details">
+                                    <h3 id="chatHeaderName">User Name</h3>
+                                    <p id="chatHeaderStatus">Active now</p>
+                                </div>
+                            </div>
+                            <button class="btn btn-sm" onclick="openProfile()">View Profile</button>
+                        </div>
+
+                        <!-- Messages -->
+                        <div class="chat-messages" id="chatMessages"></div>
+
+                        <!-- Input Area -->
+                        <div class="chat-input-area">
+                            <input type="text" class="chat-input" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+                            <div class="chat-actions">
+                                <button class="chat-action-btn" title="Attach file">📎</button>
+                                <button class="chat-action-btn" onclick="sendMessage()" title="Send">📤</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(131, 56, 236, 0.1) 100%); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+        <p style="margin-bottom: 0.5rem; font-weight: 600;">© 2026 Global Media</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Connecting people around the world 🌍</p>
+    </footer>
+
+    <script>
+        const conversations = [
+            { id: 1, name: 'Sarah Smith', emoji: '👩', status: 'Active now', unread: 2, lastMessage: 'That\'s awesome! 🎉' },
+            { id: 2, name: 'Mike Johnson', emoji: '👨', status: '2h ago', unread: 0, lastMessage: 'See you tomorrow!' },
+            { id: 3, name: 'Jane Doe', emoji: '💅', status: 'Active now', unread: 5, lastMessage: 'OMG yes! 😍' },
+            { id: 4, name: 'Alex Kumar', emoji: '🧑', status: '1h ago', unread: 1, lastMessage: 'Thanks for sharing!' },
+            { id: 5, name: 'Emma Wilson', emoji: '👸', status: 'Active now', unread: 0, lastMessage: 'Looks great! 👍' },
+        ];
+
+        const chatHistory = {
+            1: [
+                { own: false, text: 'Hey! How are you doing?' },
+                { own: true, text: 'I\'m doing great, thanks for asking! 😊' },
+                { own: false, text: 'That\'s awesome! 🎉' },
+            ],
+            2: [
+                { own: true, text: 'Hi Mike! How was your day?' },
+                { own: false, text: 'It was pretty good! Just finished a big project.' },
+                { own: true, text: 'That\'s awesome! Celebrate with coffee ☕' },
+                { own: false, text: 'See you tomorrow!' },
+            ],
+            3: [
+                { own: false, text: 'OMG did you see that post??' },
+                { own: true, text: 'Yes!! It was insane! 🔥' },
+                { own: false, text: 'OMG yes! 😍' },
+            ],
+            4: [
+                { own: true, text: 'Check out this article!' },
+                { own: false, text: 'Thanks for sharing!' },
+            ],
+            5: [
+                { own: false, text: 'Love your new post!' },
+                { own: true, text: 'Thanks! 🙌' },
+                { own: false, text: 'Looks great! 👍' },
+            ],
+        };
+
+        let currentChat = null;
+
+        function renderConversations() {
+            const list = document.getElementById('conversationsList');
+            list.innerHTML = conversations.map(conv => `
+                <div class="conversation-item ${currentChat?.id === conv.id ? 'active' : ''}" onclick="openChat(${conv.id})">
+                    <div class="conversation-avatar">${conv.emoji}</div>
+                    <div class="conversation-info">
+                        <div class="conversation-name">${conv.name}</div>
+                        <div class="conversation-preview">${conv.lastMessage}</div>
+                    </div>
+                    ${conv.unread > 0 ? `<div class="unread-badge">${conv.unread}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function openChat(conversationId) {
+            const conv = conversations.find(c => c.id === conversationId);
+            currentChat = conv;
+
+            // Update UI
+            document.getElementById('emptyState').style.display = 'none';
+            document.getElementById('chatContainer').style.display = 'flex';
+
+            document.getElementById('chatHeaderAvatar').textContent = conv.emoji;
+            document.getElementById('chatHeaderName').textContent = conv.name;
+            document.getElementById('chatHeaderStatus').textContent = conv.status;
+
+            // Load messages
+            loadMessages(conversationId);
+            renderConversations();
+
+            // Mark as read
+            conv.unread = 0;
+            renderConversations();
+        }
+
+        function loadMessages(conversationId) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messages = chatHistory[conversationId] || [];
+
+            messagesContainer.innerHTML = messages.map((msg, index) => {
+                const timeStr = new Date(Date.now() - Math.random() * 3600000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `
+                    <div class="message ${msg.own ? 'own' : ''}">
+                        <div class="message-bubble ${msg.own ? 'sent' : 'received'}">
+                            ${msg.text}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // Scroll to bottom
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+
+            if (!text || !currentChat) return;
+
+            // Add message to history
+            if (!chatHistory[currentChat.id]) {
+                chatHistory[currentChat.id] = [];
+            }
+            chatHistory[currentChat.id].push({ own: true, text: text });
+
+            // Update UI
+            loadMessages(currentChat.id);
+            input.value = '';
+
+            // Simulate response after 1 second
+            setTimeout(() => {
+                chatHistory[currentChat.id].push({ 
+                    own: false, 
+                    text: ['😊', 'That\'s great!', 'Totally agree! 🔥', 'Haha yes! 😂', 'Awesome! 🎉'][Math.floor(Math.random() * 5)] 
+                });
+                loadMessages(currentChat.id);
+            }, 1000);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function openProfile() {
+            alert(`Visiting ${currentChat.name}'s profile 👤`);
+        }
+
+        // Initialize
+        renderConversations();
+
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>

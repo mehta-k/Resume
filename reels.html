@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reels | Global Media</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .reels-container {
+            display: flex;
+            gap: 2rem;
+            height: 100vh;
+            overflow: hidden;
+            padding: 1rem 0;
+        }
+
+        .reel-viewer {
+            flex: 1;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 600px;
+        }
+
+        .reel-content {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reel-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.8) 100%);
+            padding: 2rem 1.5rem 1.5rem;
+            color: white;
+            z-index: 10;
+        }
+
+        .reel-info {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-bottom: 1rem;
+        }
+
+        .reel-creator {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            border: 3px solid white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .reel-creator:hover {
+            transform: scale(1.1);
+        }
+
+        .reel-details h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
+        }
+
+        .reel-details p {
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .reel-description {
+            margin: 0.75rem 0;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .reel-music {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            margin-top: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .reel-actions {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            z-index: 20;
+        }
+
+        .reel-action-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .reel-action-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .reel-count {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            text-align: center;
+        }
+
+        .reel-sidebar {
+            width: 320px;
+            background: var(--bg-primary);
+            border-radius: 16px;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .reel-list-item {
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(131, 56, 236, 0.1) 100%);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .reel-list-item:hover {
+            border-color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .reel-list-item.active {
+            background: var(--gradient-1);
+            color: white;
+        }
+
+        .reel-list-item h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 0.95rem;
+        }
+
+        .reel-list-item p {
+            margin: 0;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .play-pause-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            border: 3px solid white;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 15;
+            opacity: 0;
+        }
+
+        .reel-content:hover .play-pause-btn {
+            opacity: 1;
+        }
+
+        .play-pause-btn:hover {
+            background: rgba(255, 255, 255, 0.5);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .reel-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 5;
+        }
+
+        .reel-progress-bar {
+            height: 100%;
+            background: var(--gradient-1);
+            width: 30%;
+            transition: width 0.1s linear;
+        }
+
+        @media (max-width: 1024px) {
+            .reels-container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .reel-sidebar {
+                width: 100%;
+                max-height: 200px;
+                display: flex;
+                overflow-x: auto;
+                gap: 0.5rem;
+                padding: 0.75rem;
+            }
+
+            .reel-list-item {
+                min-width: 120px;
+                margin-bottom: 0;
+            }
+
+            .reel-viewer {
+                min-height: 500px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <h1>Global Media</h1>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="explore.html" class="nav-link">Explore</a>
+                <a href="reels.html" class="nav-link active">Reels</a>
+                <a href="messages.html" class="nav-link">Messages</a>
+                <a href="user-profile.html" class="nav-link">Profile</a>
+            </div>
+            <div class="user-menu">
+                <button class="dark-mode-toggle" id="darkModeToggle" title="Toggle dark mode">🌙</button>
+                <div id="userAvatarNav" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #FF006E 0%, #8338EC 100%); font-size: 1.5rem; cursor: pointer; border: 2px solid var(--primary-color);">👤</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="max-width: 1600px; grid-template-columns: 1fr;">
+        <main class="feed" style="background: transparent; border: none; padding: 0;">
+            <div class="reels-container">
+                <!-- Reel Viewer -->
+                <div class="reel-viewer">
+                    <div class="reel-content" id="reelContent">
+                        🎬
+                        <button class="play-pause-btn" onclick="togglePlayPause()">▶️</button>
+                        <div class="reel-progress">
+                            <div class="reel-progress-bar"></div>
+                        </div>
+                    </div>
+                    <div class="reel-overlay">
+                        <div class="reel-info">
+                            <div class="reel-creator">👤</div>
+                            <div class="reel-details">
+                                <h3 id="reelCreator">@creator</h3>
+                                <p id="reelFollowers">234K followers</p>
+                            </div>
+                        </div>
+                        <p class="reel-description" id="reelDescription">Check out this amazing reel! 🔥</p>
+                        <div class="reel-music">
+                            <span>🎵</span>
+                            <span id="reelMusic">Trending Audio Track</span>
+                        </div>
+                    </div>
+                    <div class="reel-actions">
+                        <div>
+                            <button class="reel-action-btn" onclick="likeReel(this)">❤️</button>
+                            <div class="reel-count" id="likeCount">0</div>
+                        </div>
+                        <div>
+                            <button class="reel-action-btn" onclick="commentReel()">💬</button>
+                            <div class="reel-count" id="commentCount">0</div>
+                        </div>
+                        <div>
+                            <button class="reel-action-btn" onclick="shareReel()">📤</button>
+                        </div>
+                        <div>
+                            <button class="reel-action-btn" onclick="saveReel(this)">🔖</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reels Sidebar -->
+                <div class="reel-sidebar">
+                    <h3 style="margin-top: 0; color: var(--primary-color);">🎬 Popular Reels</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button onclick="openCreateReelModal()" style="padding: 0.75rem; background: var(--gradient-1); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">➕ Create</button>
+                        <button onclick="openAddFromUrlModal()" style="padding: 0.75rem; background: rgba(131, 56, 236, 0.5); color: white; border: 2px solid #8338EC; border-radius: 8px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">🔗 Add URL</button>
+                    </div>
+                    <div id="reelsList"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Create Reel Modal -->
+    <div id="reelModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div style="background: var(--bg-primary); border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+            <h2 style="margin-top: 0;">Create New Reel 🎬</h2>
+            
+            <form id="reelForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Video URL (Optional)</label>
+                    <input type="url" id="reelUrl" placeholder="e.g., https://example.com/video.mp4" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Pick Emoji 😊</label>
+                    <input type="text" id="reelEmoji" placeholder="e.g., 🎥, 📱, 🎤" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" maxlength="2" required>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Your Username</label>
+                    <input type="text" id="reelCreator" placeholder="@username" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" required>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Followers</label>
+                    <input type="text" id="reelFollowers" placeholder="e.g., 100K" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" required>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Reel Description</label>
+                    <textarea id="reelDescription" placeholder="What's your reel about?" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); resize: vertical; min-height: 80px;" required></textarea>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Music/Audio</label>
+                    <input type="text" id="reelMusic" placeholder="e.g., Pop - Feel Good" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" required>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Likes</label>
+                        <input type="number" id="reelLikes" placeholder="e.g., 1000" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" value="0" required>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Comments</label>
+                        <input type="number" id="reelComments" placeholder="e.g., 50" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" value="0" required>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" style="flex: 1; padding: 0.75rem; background: var(--gradient-1); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">Post Reel ✨</button>
+                    <button type="button" onclick="closeCreateReelModal()" style="flex: 1; padding: 0.75rem; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; font-weight: 600;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add from URL Modal -->
+    <div id="urlModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; display: flex; align-items: center; justify-content: center;">
+        <div style="background: var(--bg-primary); border-radius: 16px; padding: 2rem; max-width: 500px; width: 90%; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);">
+            <h2 style="margin-top: 0;">Add Reel from URL 🔗</h2>
+            <p style="color: var(--text-secondary); font-size: 0.9rem;">Paste a video URL to quickly add a reel. Supports most video formats!</p>
+            
+            <form id="urlForm" style="display: flex; flex-direction: column; gap: 1rem;">
+                <div>
+                    <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Video/Reel URL</label>
+                    <input type="url" id="urlInput" placeholder="https://example.com/video.mp4" style="width: 100%; padding: 0.75rem; border: 2px solid var(--primary-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" required>
+                </div>
+
+                <div style="background: rgba(131, 56, 236, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #8338EC;">
+                    <p style="margin: 0 0 0.5rem 0; font-size: 0.85rem; font-weight: 600;">📋 Auto-filled from URL:</p>
+                    <div style="font-size: 0.9rem; color: var(--text-secondary);">
+                        <p style="margin: 0.25rem 0;"><strong>Creator:</strong> <span id="urlCreator">Will be auto-filled</span></p>
+                        <p style="margin: 0.25rem 0;"><strong>Description:</strong> <span id="urlDescription">Will be auto-filled</span></p>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Emoji 😊</label>
+                        <input type="text" id="urlEmoji" placeholder="🎬" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" maxlength="2" value="🎬">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Followers</label>
+                        <input type="text" id="urlFollowers" placeholder="e.g., 100K" style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);" value="123K">
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" style="flex: 1; padding: 0.75rem; background: var(--gradient-1); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: transform 0.2s;">Add Reel 🚀</button>
+                    <button type="button" onclick="closeAddFromUrlModal()" style="flex: 1; padding: 0.75rem; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--border-color); border-radius: 8px; cursor: pointer; font-weight: 600;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer style="background: linear-gradient(135deg, rgba(255, 0, 110, 0.1) 0%, rgba(131, 56, 236, 0.1) 100%); border-top: 1px solid var(--border-color); padding: 2rem; text-align: center; margin-top: 2rem; color: var(--text-secondary);">
+        <p style="margin-bottom: 0.5rem; font-weight: 600;">© 2026 Global Media</p>
+        <p style="margin-top: 0.5rem; font-size: 0.85rem;">Connecting people around the world 🌍</p>
+    </footer>
+
+    <script>
+        // Modal functions
+        function openCreateReelModal() {
+            document.getElementById('reelModal').style.display = 'flex';
+        }
+
+        function closeCreateReelModal() {
+            document.getElementById('reelModal').style.display = 'none';
+            document.getElementById('reelForm').reset();
+        }
+
+        function openAddFromUrlModal() {
+            document.getElementById('urlModal').style.display = 'flex';
+        }
+
+        function closeAddFromUrlModal() {
+            document.getElementById('urlModal').style.display = 'none';
+            document.getElementById('urlForm').reset();
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('reelModal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeCreateReelModal();
+                }
+            });
+
+            const urlModal = document.getElementById('urlModal');
+            urlModal.addEventListener('click', function(e) {
+                if (e.target === urlModal) {
+                    closeAddFromUrlModal();
+                }
+            });
+
+            // Handle form submission
+            document.getElementById('reelForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const newReel = {
+                    emoji: document.getElementById('reelEmoji').value,
+                    creator: document.getElementById('reelCreator').value,
+                    followers: document.getElementById('reelFollowers').value,
+                    description: document.getElementById('reelDescription').value,
+                    music: document.getElementById('reelMusic').value,
+                    likes: parseInt(document.getElementById('reelLikes').value) || 0,
+                    comments: parseInt(document.getElementById('reelComments').value) || 0
+                };
+
+                // Add to reels array
+                reels.unshift(newReel); // Add to beginning
+                
+                // Save to localStorage
+                localStorage.setItem('userReels', JSON.stringify(reels));
+                
+                // Refresh list and load new reel
+                renderReelsList();
+                loadReel(0);
+                
+                // Show success message
+                alert('✨ Reel posted successfully! Your reel is now at the top.');
+                closeCreateReelModal();
+            });
+
+            // Handle URL form submission
+            document.getElementById('urlForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const url = document.getElementById('urlInput').value;
+                
+                // Extract filename or domain from URL
+                const urlObj = new URL(url);
+                const filename = urlObj.pathname.split('/').pop() || 'video';
+                const domain = urlObj.hostname.replace('www.', '');
+
+                const newReel = {
+                    emoji: document.getElementById('urlEmoji').value,
+                    creator: '@' + domain.split('.')[0],
+                    followers: document.getElementById('urlFollowers').value,
+                    description: `Check out this amazing content! 🎬 ${filename}`,
+                    music: 'Web - External Content',
+                    likes: Math.floor(Math.random() * 10000),
+                    comments: Math.floor(Math.random() * 500),
+                    url: url // Store the URL
+                };
+
+                // Add to reels array
+                reels.unshift(newReel);
+                
+                // Save to localStorage
+                localStorage.setItem('userReels', JSON.stringify(reels));
+                
+                // Refresh list and load new reel
+                renderReelsList();
+                loadReel(0);
+                
+                // Show success message
+                alert('🚀 Reel from URL added successfully! Enjoy!');
+                closeAddFromUrlModal();
+            });
+
+            // Auto-populate creator and description from URL
+            document.getElementById('urlInput').addEventListener('change', function() {
+                const url = this.value;
+                if (url) {
+                    try {
+                        const urlObj = new URL(url);
+                        const domain = urlObj.hostname.replace('www.', '');
+                        const creator = '@' + domain.split('.')[0];
+                        const filename = urlObj.pathname.split('/').pop() || 'shared video';
+                        
+                        document.getElementById('urlCreator').textContent = creator;
+                        document.getElementById('urlDescription').textContent = `Shared: ${filename}`;
+                    } catch (e) {
+                        document.getElementById('urlCreator').textContent = 'Invalid URL';
+                        document.getElementById('urlDescription').textContent = 'Please enter a valid URL';
+                    }
+                }
+            });
+
+            // Load saved reels from localStorage
+            const savedReels = localStorage.getItem('userReels');
+            if (savedReels) {
+                reels.length = 0; // Clear array
+                reels.push(...JSON.parse(savedReels)); // Add saved reels
+            }
+        });
+
+        const reels = [
+            { emoji: '💻', creator: '@coderlife', followers: '234K', description: 'Just deployed a new React project! 🚀', music: 'Trap - Trending Audio', likes: 12500, comments: 234 },
+            { emoji: '🎨', creator: '@artistry', followers: '189K', description: 'Digital art tutorial in 60 seconds ✨', music: 'Lo-fi - Study Beats', likes: 8900, comments: 156 },
+            { emoji: '✈️', creator: '@traveler', followers: '456K', description: 'Hidden gem beaches you must visit!', music: 'Relaxing - Beach Vibes', likes: 25000, comments: 512 },
+            { emoji: '💪', creator: '@fitlife', followers: '312K', description: 'Crazy workout challenge - Day 30!', music: 'EDM - Pump It Up', likes: 18900, comments: 345 },
+            { emoji: '🍕', creator: '@foodie', followers: '278K', description: 'Best pizza hack you\'ve ever seen 🤤', music: 'Pop - Feel Good', likes: 15600, comments: 298 },
+            { emoji: '🎮', creator: '@gamer', followers: '567K', description: 'Epic gaming moment! 🎯', music: 'Gaming - Epic Soundtrack', likes: 32100, comments: 678 },
+            { emoji: '📚', creator: '@bookworm', followers: '145K', description: 'Top 5 must-read books of 2024 📖', music: 'Classical - Peaceful Piano', likes: 6700, comments: 123 },
+            { emoji: '🎵', creator: '@musicpro', followers: '389K', description: 'How I produce beats in 10 minutes 🎧', music: 'Hip-Hop - Beat Drop', likes: 21400, comments: 456 },
+            { emoji: '🏠', creator: '@homedecor', followers: '267K', description: 'Room makeover transformation! 🛋️', music: 'House - Uplifting', likes: 14200, comments: 289 },
+            { emoji: '🌱', creator: '@plantlover', followers: '198K', description: 'Growing succulents indoors - Easy guide 🌿', music: 'Ambient - Nature Sounds', likes: 9800, comments: 167 },
+            { emoji: '🎓', creator: '@studytips', followers: '421K', description: 'Study hacks that actually work! 📝', music: 'Motivational - Power Up', likes: 28900, comments: 567 },
+            { emoji: '🚗', creator: '@cartuner', followers: '534K', description: 'Modified my car in 24 hours! 🏎️', music: 'Action - Fast & Furious', likes: 35600, comments: 712 },
+            { emoji: '☕', creator: '@coffeehead', followers: '223K', description: 'Latte art competition results 🎨', music: 'Café - Lo-fi Chill', likes: 11200, comments: 198 },
+            { emoji: '🎬', creator: '@filmmaker', followers: '612K', description: 'Behind the scenes of my new short film 🎥', music: 'Cinematic - Epic', likes: 42100, comments: 834 },
+            { emoji: '⚽', creator: '@sportsfan', followers: '445K', description: 'Crazy football skills you won\'t believe 🏟️', music: 'Sports - Hyped Up', likes: 31200, comments: 654 },
+        ];
+
+        let currentReel = 0;
+        let isPlaying = true;
+        let progressInterval;
+
+        function loadReel(index) {
+            const reel = reels[index];
+            document.getElementById('reelContent').innerHTML = `
+                ${reel.emoji}
+                <button class="play-pause-btn" onclick="togglePlayPause()">▶️</button>
+                <div class="reel-progress">
+                    <div class="reel-progress-bar"></div>
+                </div>
+            `;
+            document.getElementById('reelCreator').textContent = reel.creator;
+            document.getElementById('reelFollowers').textContent = reel.followers + ' followers';
+            document.getElementById('reelDescription').textContent = reel.description;
+            document.getElementById('reelMusic').textContent = reel.music;
+            document.getElementById('likeCount').textContent = reel.likes.toLocaleString();
+            document.getElementById('commentCount').textContent = reel.comments.toLocaleString();
+
+            // Update sidebar highlight
+            document.querySelectorAll('.reel-list-item').forEach((item, i) => {
+                item.classList.toggle('active', i === index);
+            });
+
+            // Reset progress
+            document.querySelector('.reel-progress-bar').style.width = '0%';
+            startProgress();
+        }
+
+        function renderReelsList() {
+            const reelsList = document.getElementById('reelsList');
+            reelsList.innerHTML = reels.map((reel, index) => `
+                <div class="reel-list-item ${index === 0 ? 'active' : ''}" onclick="switchReel(${index})">
+                    <h4>${reel.emoji} ${reel.creator}</h4>
+                    <p>${reel.description.substring(0, 40)}...</p>
+                </div>
+            `).join('');
+        }
+
+        function switchReel(index) {
+            currentReel = index;
+            loadReel(index);
+        }
+
+        function startProgress() {
+            clearInterval(progressInterval);
+            let progress = 0;
+            progressInterval = setInterval(() => {
+                if (isPlaying) {
+                    progress += 2;
+                    document.querySelector('.reel-progress-bar').style.width = progress + '%';
+                    if (progress >= 100) {
+                        nextReel();
+                    }
+                }
+            }, 100);
+        }
+
+        function nextReel() {
+            currentReel = (currentReel + 1) % reels.length;
+            loadReel(currentReel);
+        }
+
+        function togglePlayPause() {
+            isPlaying = !isPlaying;
+            document.querySelector('.play-pause-btn').textContent = isPlaying ? '⏸️' : '▶️';
+        }
+
+        function likeReel(btn) {
+            btn.style.animation = 'pulse 0.6s ease';
+            const count = document.getElementById('likeCount');
+            count.textContent = (parseInt(count.textContent) + 1).toLocaleString();
+        }
+
+        function commentReel() {
+            alert('Comments coming soon! 💬');
+        }
+
+        function shareReel() {
+            alert('Share this reel! 📤');
+        }
+
+        function saveReel(btn) {
+            btn.textContent = btn.textContent === '🔖' ? '✅' : '🔖';
+            alert(btn.textContent === '✅' ? 'Reel saved! 📌' : 'Reel unsaved');
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowDown' || e.key === 'j') nextReel();
+            if (e.key === ' ') { e.preventDefault(); togglePlayPause(); }
+        });
+
+        // Add pulse animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0%, 100% { transform: scale(1); }
+                50% { transform: scale(1.2); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        renderReelsList();
+        loadReel(0);
+
+        // Dark mode toggle
+        document.getElementById('darkModeToggle').addEventListener('click', function() {
+            document.body.classList.toggle('dark-mode');
+            this.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        });
+    </script>
+</body>
+</html>
